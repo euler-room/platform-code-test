@@ -1,20 +1,19 @@
 require 'rspec'
 require 'update_quality'
 
-describe '#update_quality' do
+describe '#update' do
 
   context 'Given a single award' do
     let(:initial_expires_in) { 5 }
     let(:initial_quality) { 10 }
-    let(:award) { Award.new(name, initial_expires_in, initial_quality) }
-
+    let(:award) { Award.new('NORMAL ITEM', initial_expires_in, initial_quality) }
+    
     context 'when quality is updated' do
       before do
         update_quality([award])
       end
 
       context 'given a normal award' do
-        let(:name) { 'NORMAL ITEM' }
 
         before do
           # Verify that this is always true in the current context
@@ -42,7 +41,7 @@ describe '#update_quality' do
       end
 
       context 'given Blue First' do
-        let(:name) { 'Blue First' }
+        let(:award) { Award.new('Blue First', initial_expires_in, initial_quality) }
 
         before do
           # Verify that this is always true in the current context
@@ -177,7 +176,7 @@ describe '#update_quality' do
       end
 
       context 'given a Blue Star award' do
-        before { pending }
+        # before { pending }
         let(:name) { 'Blue Star' }
         before { award.expires_in.should == initial_expires_in-1 }
 
