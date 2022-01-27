@@ -1,6 +1,10 @@
 class Award
   QUALITY_FREEZE = 0
-  QUALITY_DEGRADATION_RATE = { active: -1, expired: -2 }
+  ACTIVE_DEGRADATION_RATE = -1
+  EXPIRED_DEGRADATION_RATE = -2
+
+  # All awards have an expires_in value which denotes the number of days until the award expires.
+  # All awards have a quality value which denotes how valuable the award is in our overall calculation.
   attr_accessor :name, :expires_in, :quality
   
   def new(award_name, initial_expires_in, initial_quality)
@@ -21,7 +25,7 @@ class Award
   end
   
   def degradation_rate
-    QUALITY_DEGRADATION_RATE[active? ? :active : :expired]
+    active? ? ACTIVE_DEGRADATION_RATE : EXPIRED_DEGRADATION_RATE
   end
   
   def update_quality
@@ -35,51 +39,4 @@ class Award
   def active?
     @expires_in > 0
   end
-
-
-  ### BlueFirst ##################
-
-  class BlueFirst < Award
-    QUALITY_FREEZE = 50
-    QUALITY_DEGRADATION_RATE = { active: 1, expired: -2 }
-    def initialize(award_name, initial_expires_in, initial_quality)
-      super(award_name, initial_expires_in, initial_quality)
-    end
-    def update
-      update_quality
-      update_expires_in
-    end
-  end
-
-
-  ### BlueCompare ################
-
-  class BlueCompare  < Award
-    def update
-      update_quality
-      update_expires_in
-    end
-  end
-
-
-  ### BlueDistinctionPlus ########
-
-  class BlueDistinctionPlus  < Award
-    def update
-      update_quality
-    end
-    
-  end
-
-
-  ### BlueStar ###################
-
-  class BlueStar  < Award
-    QUALITY_DEGRADATION_RATE_SCALER = 2
-    def update
-      update_quality
-      update_expires_in
-    end
-  end
-
 end
